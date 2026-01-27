@@ -2883,7 +2883,11 @@
                     const basePer = obterValorBase(linhaPer);
                     const diasTrab = getValorNum(el.clt_dias_trabalhados);
                     const dias_efetivos_adic = Math.max(0, diasTrab - getValorNum(el.clt_faltas_dias));
-                    vals.per = (basePer * (percPer / 100) / 30) * dias_efetivos_adic;
+
+                    // Se Férias estiver ativo, divisor é dias do mês. Se não, é 30.
+                    const divisorPer = el.clt_ferias_ativo && el.clt_ferias_ativo.checked ? getValorNum(el.clt_dias_mes) : 30;
+
+                    vals.per = (basePer * (percPer / 100) / divisorPer) * dias_efetivos_adic;
                 }
                 document.getElementById("clt_periculosidade-valor").textContent = formatBRL(vals.per);
 
@@ -2944,7 +2948,9 @@
                     el.clt_dias_trabalhados.value = "30";
                 }
 
-                c.salario_proporcional = (c.salario_base / 30) * c.dias_trabalhados;
+                // Se Férias estiver ativo, divisor é dias do mês. Se não, é 30.
+                const divisorProp = el.clt_ferias_ativo && el.clt_ferias_ativo.checked ? getValorNum(el.clt_dias_mes) : 30;
+                c.salario_proporcional = (c.salario_base / divisorProp) * c.dias_trabalhados;
 
                 const diasInfo = calcularDiasUteisENaoUteis(c.mes, c.ano);
 
