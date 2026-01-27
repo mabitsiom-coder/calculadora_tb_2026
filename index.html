@@ -3079,7 +3079,9 @@
                 desc_inss = (c.base_inss * faixa.aliquota) - faixa.deducao;
                 c.desc_inss = Math.min(desc_inss, 988.07);
 
-                c.fgts_valor = base_inss_raw * 0.08;
+                // Base FGTS: Total Proventos - Faltas/Atrasos (INCLUI Férias)
+                const base_fgts = c.total_proventos - c.faltas_valor - c.faltas_dsr_valor - c.atrasos_valor;
+                c.fgts_valor = base_fgts * 0.08;
 
                 const deducao_dep = getValorNum(el.clt_dependentes_irrf) * DEDUCAO_DEPENDENTE_IRRF;
                 c.base_irrf = c.total_proventos - c.desc_inss - deducao_dep - (c.faltas_valor + c.faltas_dsr_valor + c.atrasos_valor);
