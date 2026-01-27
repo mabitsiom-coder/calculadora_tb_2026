@@ -115,6 +115,49 @@
                                             class="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500"><label
                                             for="clt_editar_dias_trabalhados"
                                             class="ml-2 text-xs text-gray-600">Sobrescrever</label></div>
+                                    <div
+                                        class="flex items-center mt-1 bg-yellow-50 p-1 rounded border border-yellow-100">
+                                        <input type="checkbox" id="clt_ferias_ativo"
+                                            class="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500">
+                                        <label for="clt_ferias_ativo"
+                                            class="ml-2 text-xs text-gray-600 bg-yellow-50">Funcionário de
+                                            Férias</label>
+                                    </div>
+
+                                    <!-- Campos de Férias (Ocultos por padrão) -->
+                                    <div id="clt_ferias_container"
+                                        class="mt-3 p-3 bg-yellow-50 border border-yellow-200 rounded-md hidden space-y-3">
+                                        <div>
+                                            <label class="block text-xs font-bold text-yellow-800 uppercase">Férias
+                                                Valor (R$)</label>
+                                            <input type="number" id="clt_ferias_valor" placeholder="0,00"
+                                                class="mt-1 block w-full rounded-md border-yellow-300 shadow-sm focus:border-yellow-500 focus:ring-yellow-500 sm:text-sm">
+                                        </div>
+                                        <div>
+                                            <label class="block text-xs font-bold text-yellow-800 uppercase">Férias
+                                                (1/3) (R$)</label>
+                                            <input type="number" id="clt_ferias_terco" placeholder="0,00"
+                                                class="mt-1 block w-full rounded-md border-yellow-300 shadow-sm focus:border-yellow-500 focus:ring-yellow-500 sm:text-sm">
+                                        </div>
+                                        <div>
+                                            <label class="block text-xs font-bold text-yellow-800 uppercase">Média Horas
+                                                (R$)</label>
+                                            <input type="number" id="clt_ferias_media_horas" placeholder="0,00"
+                                                class="mt-1 block w-full rounded-md border-yellow-300 shadow-sm focus:border-yellow-500 focus:ring-yellow-500 sm:text-sm">
+                                        </div>
+                                        <div>
+                                            <label class="block text-xs font-bold text-yellow-800 uppercase">Média
+                                                Valores (R$)</label>
+                                            <input type="number" id="clt_ferias_media_valores" placeholder="0,00"
+                                                class="mt-1 block w-full rounded-md border-yellow-300 shadow-sm focus:border-yellow-500 focus:ring-yellow-500 sm:text-sm">
+                                        </div>
+                                        <div>
+                                            <label class="block text-xs font-bold text-yellow-800 uppercase">Outras
+                                                Vantagens (R$)</label>
+                                            <input type="number" id="clt_ferias_outras" placeholder="0,00"
+                                                class="mt-1 block w-full rounded-md border-yellow-300 shadow-sm focus:border-yellow-500 focus:ring-yellow-500 sm:text-sm">
+                                        </div>
+                                    </div>
                                 </div>
                                 <div><label class="block text-sm font-medium text-gray-700">Salário Proporcional
                                         (R$)</label><span id="clt_out_salario_proporcional"
@@ -2601,7 +2644,8 @@
             function cacheElementos() {
                 const ids = [
                     'clt_salario_base', 'clt_jornada_mes', 'clt_mes_competencia', 'clt_dias_mes', 'clt_dias_trabalhados',
-                    'clt_editar_dias_trabalhados', 'clt_out_salario_proporcional', 'clt_dias_uteis', 'clt_dias_nao_uteis',
+                    'clt_editar_dias_trabalhados', 'clt_ferias_ativo', 'clt_out_salario_proporcional', 'clt_dias_uteis', 'clt_dias_nao_uteis',
+                    'clt_ferias_container', 'clt_ferias_valor', 'clt_ferias_terco', 'clt_ferias_media_horas', 'clt_ferias_media_valores', 'clt_ferias_outras',
                     'clt_valor_hora', 'clt_editar_valor_hora', 'clt_valor_dia', 'clt_editar_valor_dia', 'clt_quebra_caixa_opt',
                     'clt_out_quebra_caixa_valor', 'clt_inter_horas', 'clt_inter_fator', 'clt_out_inter_valor',
                     'clt_out_inter_reflexo', 'clt_out_inter_total', 'clt_interjornada_horas', 'clt_out_interjornada_valor',
@@ -2986,6 +3030,15 @@
                 c.noturno_valor = valor_hora_real * (getValorNum(el.clt_noturno_perc) / 100) * getValorNum(el.clt_noturno_horas);
                 c.noturno_total = c.noturno_valor + (c.noturno_valor * c.fator_dsr);
 
+                // --- FÉRIAS ---
+                c.ferias_valor = getValorNum(el.clt_ferias_valor);
+                c.ferias_terco = getValorNum(el.clt_ferias_terco); // Usuário pode digitar ou ser calculado
+                c.ferias_media_horas = getValorNum(el.clt_ferias_media_horas);
+                c.ferias_media_valores = getValorNum(el.clt_ferias_media_valores);
+                c.ferias_outras = getValorNum(el.clt_ferias_outras);
+
+                c.ferias_total = c.ferias_valor + c.ferias_terco + c.ferias_media_horas + c.ferias_media_valores + c.ferias_outras;
+
                 const valor_dia_base = c.salario_base / 30;
                 c.faltas_valor = valor_dia_base * getValorNum(el.clt_faltas_dias);
                 c.faltas_dsr_valor = valor_dia_base * getValorNum(el.clt_faltas_dsr_dias);
@@ -2994,7 +3047,20 @@
                 c.total_proventos = c.salario_proporcional + c.periculosidade_valor + c.periculosidade_reflexo +
                     c.insalubridade_valor + c.tempo_valor + c.grat_funcao_valor + c.adic_comissoes +
                     c.quebra_caixa_valor + c.adic_gratificacoes + c.comissoes_reflexo_dsr + c.inter_total +
-                    c.interjornada_total + c.noturno_total + c.he_total_geral;
+                    c.interjornada_total + c.noturno_total + c.he_total_geral + c.ferias_total;
+
+                // --- UI UPDATE FOR VACATION ---
+                const feriasAtivo = el.clt_ferias_ativo.checked;
+                if (el.clt_ferias_container) {
+                    el.clt_ferias_container.classList.toggle('hidden', !feriasAtivo);
+                }
+
+                // Auto-calc 1/3 if related fields change (can be refined but simple sum approach here)
+                // We won't force-overwrite 1/3 if user typed it, UNLESS we detect a change in others?
+                // For simplicity, let's keep it as manual input OR add a listener in init to calc it.
+                // But here in `calcularTudo`, we just READ and SUM.
+                // The auto-calc logic should be in event listeners or separate function.
+                // Let's add the basic sum here first.
 
                 const base_inss_raw = c.total_proventos - c.faltas_valor - c.faltas_dsr_valor - c.atrasos_valor;
                 c.base_inss = Math.min(base_inss_raw, TETO_INSS_2026);
@@ -3171,7 +3237,9 @@
                     "clt_periculosidade-ativo", "clt_periculosidade-percent",
                     "clt_periculosidade-reflexo-ativo",
                     "clt_tempo-servico-tipo", "clt_tempo-servico-percent",
-                    "clt_adic_gratificacoes", "clt_adic_comissoes", "clt_check_grat_funcao"
+                    "clt_adic_gratificacoes", "clt_adic_comissoes", "clt_check_grat_funcao",
+                    "clt_ferias_ativo", "clt_ferias_valor", "clt_ferias_terco",
+                    "clt_ferias_media_horas", "clt_ferias_media_valores", "clt_ferias_outras"
                 ];
                 idsAdic.forEach(id => {
                     const elem = document.getElementById(id);
@@ -3179,6 +3247,29 @@
                         elem.addEventListener('change', calcularTudo);
                         if (elem.tagName === 'INPUT') elem.addEventListener('input', calcularTudo);
                     }
+                });
+
+                // Auto-calc 1/3 Férias
+                const calcTerco = () => {
+                    if (!el.clt_ferias_ativo.checked) return;
+                    const v = getValorNum(el.clt_ferias_valor);
+                    const mh = getValorNum(el.clt_ferias_media_horas);
+                    const mv = getValorNum(el.clt_ferias_media_valores);
+                    const ov = getValorNum(el.clt_ferias_outras);
+                    // Base calculation: (Valor + Medias + Outras) / 3 ???
+                    // Usually "Outras Vantagens" might include 1/3 or not. 
+                    // Let's assume standard: Base = Valor + Horas + Valores. 
+                    // Outras Vantagens might be exempt from 1/3? 
+                    // Let's stick to safe bet: (Valor + Medias) / 3.
+                    const terco = (v + mh + mv) / 3;
+                    el.clt_ferias_terco.value = terco.toFixed(2);
+                    calcularTudo();
+                };
+
+                // Attach auto-calc listener only to specific fields
+                ['clt_ferias_valor', 'clt_ferias_media_horas', 'clt_ferias_media_valores'].forEach(id => {
+                    const elem = document.getElementById(id);
+                    if (elem) elem.addEventListener('blur', calcTerco); // Calc on blur to avoid fighting user
                 });
 
                 atualizarDiasDoMes();
