@@ -3039,13 +3039,21 @@
                 c.noturno_total = c.noturno_valor + (c.noturno_valor * c.fator_dsr);
 
                 // --- FÉRIAS ---
-                c.ferias_valor = getValorNum(el.clt_ferias_valor);
-                c.ferias_terco = getValorNum(el.clt_ferias_terco); // Usuário pode digitar ou ser calculado
-                c.ferias_media_horas = getValorNum(el.clt_ferias_media_horas);
-                c.ferias_media_valores = getValorNum(el.clt_ferias_media_valores);
-                c.ferias_outras = getValorNum(el.clt_ferias_outras);
-
-                c.ferias_total = c.ferias_valor + c.ferias_terco + c.ferias_media_horas + c.ferias_media_valores + c.ferias_outras;
+                if (el.clt_ferias_ativo && el.clt_ferias_ativo.checked) {
+                    c.ferias_valor = getValorNum(el.clt_ferias_valor);
+                    c.ferias_terco = getValorNum(el.clt_ferias_terco);
+                    c.ferias_media_horas = getValorNum(el.clt_ferias_media_horas);
+                    c.ferias_media_valores = getValorNum(el.clt_ferias_media_valores);
+                    c.ferias_outras = getValorNum(el.clt_ferias_outras);
+                    c.ferias_total = c.ferias_valor + c.ferias_terco + c.ferias_media_horas + c.ferias_media_valores + c.ferias_outras;
+                } else {
+                    c.ferias_valor = 0;
+                    c.ferias_terco = 0;
+                    c.ferias_media_horas = 0;
+                    c.ferias_media_valores = 0;
+                    c.ferias_outras = 0;
+                    c.ferias_total = 0;
+                }
 
                 const valor_dia_base = c.salario_base / 30;
                 c.faltas_valor = valor_dia_base * getValorNum(el.clt_faltas_dias);
