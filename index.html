@@ -3260,28 +3260,8 @@
                     }
                 });
 
-                // Auto-calc 1/3 Férias
-                const calcTerco = () => {
-                    if (!el.clt_ferias_ativo.checked) return;
-                    const v = getValorNum(el.clt_ferias_valor);
-                    const mh = getValorNum(el.clt_ferias_media_horas);
-                    const mv = getValorNum(el.clt_ferias_media_valores);
-                    const ov = getValorNum(el.clt_ferias_outras);
-                    // Base calculation: (Valor + Medias + Outras) / 3 ???
-                    // Usually "Outras Vantagens" might include 1/3 or not. 
-                    // Let's assume standard: Base = Valor + Horas + Valores. 
-                    // Outras Vantagens might be exempt from 1/3? 
-                    // Let's stick to safe bet: (Valor + Medias) / 3.
-                    const terco = (v + mh + mv) / 3;
-                    el.clt_ferias_terco.value = terco.toFixed(2);
-                    calcularTudo();
-                };
-
-                // Attach auto-calc listener only to specific fields
-                ['clt_ferias_valor', 'clt_ferias_media_horas', 'clt_ferias_media_valores'].forEach(id => {
-                    const elem = document.getElementById(id);
-                    if (elem) elem.addEventListener('blur', calcTerco); // Calc on blur to avoid fighting user
-                });
+                // Auto-calc logic removed to allow manual input per user request.
+                // 1/3 Vacation is now strictly manual.
 
                 atualizarDiasDoMes();
                 calcularTudo();
