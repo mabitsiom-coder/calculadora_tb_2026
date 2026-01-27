@@ -2789,7 +2789,9 @@
 
                 const salBase = getValorNum(el.clt_salario_base);
                 const diasTrab = getValorNum(el.clt_dias_trabalhados);
-                const salProporcional = (salBase / 30) * diasTrab;
+                // Correção: Usar mesma lógica de divisor (dias do mês se férias ativo vs 30)
+                const divisorProp = el.clt_ferias_ativo && el.clt_ferias_ativo.checked ? getValorNum(el.clt_dias_mes) : 30;
+                const salProporcional = (salBase / divisorProp) * diasTrab;
 
                 const comissoes = getValorNum(el.clt_adic_comissoes);
                 const gratis = getValorNum(el.clt_adic_gratificacoes);
@@ -3068,7 +3070,8 @@
                 // The auto-calc logic should be in event listeners or separate function.
                 // Let's add the basic sum here first.
 
-                const base_inss_raw = c.total_proventos - c.faltas_valor - c.faltas_dsr_valor - c.atrasos_valor;
+                // Base INSS: Total Proventos - Faltas/Atrasos - Férias (pois férias tem tributação própria ou não incide aqui conforme solicitado)
+                const base_inss_raw = c.total_proventos - c.faltas_valor - c.faltas_dsr_valor - c.atrasos_valor - c.ferias_total;
                 c.base_inss = Math.min(base_inss_raw, TETO_INSS_2026);
 
                 let desc_inss = 0;
