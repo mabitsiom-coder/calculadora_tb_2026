@@ -741,48 +741,45 @@
                                         <div class="space-y-3">
                                             <h4
                                                 class="text-xs font-bold text-indigo-700 text-center uppercase tracking-wide">
-                                                Vigência: A partir de Maio/2025</h4>
+                                                Tabela do IR para Ano-base 2026 (Vigência 2026)</h4>
                                             <p class="text-xs text-gray-600 text-center mb-2">Dedução Dep.: <strong>R$
-                                                    189,59</strong><br>Simplificado: <strong>R$ 607,20</strong></p>
+                                                    189,59</strong><br>Simplificado: <strong>R$ 1.250,00</strong></p>
                                             <table class="min-w-full divide-y divide-gray-200">
                                                 <thead class="bg-gray-50">
                                                     <tr>
                                                         <th
                                                             class="px-2 py-2 text-left text-xs font-medium text-gray-500 uppercase">
-                                                            Base (R$)</th>
+                                                            Faixa de Rendimento (Base)</th>
                                                         <th
                                                             class="px-2 py-2 text-left text-xs font-medium text-gray-500 uppercase">
-                                                            %</th>
-                                                        <th
-                                                            class="px-2 py-2 text-left text-xs font-medium text-gray-500 uppercase">
-                                                            Deduzir</th>
+                                                            Desconto de IR</th>
                                                     </tr>
                                                 </thead>
                                                 <tbody class="bg-white divide-y divide-gray-200 text-xs">
                                                     <tr>
-                                                        <td class="px-2 py-2">Até 2.428,80</td>
-                                                        <td class="px-2 py-2">Isento</td>
-                                                        <td class="px-2 py-2">-</td>
+                                                        <td class="px-2 py-2">Até R$ 5.000,00</td>
+                                                        <td class="px-2 py-2">Isenção total</td>
                                                     </tr>
                                                     <tr>
-                                                        <td class="px-2 py-2">2.428,81 a 2.826,65</td>
-                                                        <td class="px-2 py-2">7,5%</td>
-                                                        <td class="px-2 py-2">R$ 182,16</td>
+                                                        <td class="px-2 py-2">De R$ 5.000,01 até R$ 5.500,00</td>
+                                                        <td class="px-2 py-2">Desconto de 75%</td>
                                                     </tr>
                                                     <tr>
-                                                        <td class="px-2 py-2">2.826,66 a 3.751,05</td>
-                                                        <td class="px-2 py-2">15%</td>
-                                                        <td class="px-2 py-2">R$ 394,16</td>
+                                                        <td class="px-2 py-2">De R$ 5.500,01 até R$ 6.000,00</td>
+                                                        <td class="px-2 py-2">Desconto de 50%</td>
                                                     </tr>
                                                     <tr>
-                                                        <td class="px-2 py-2">3.751,06 a 4.664,68</td>
-                                                        <td class="px-2 py-2">22,5%</td>
-                                                        <td class="px-2 py-2">R$ 675,49</td>
+                                                        <td class="px-2 py-2">De R$ 6.000,01 até R$ 6.500,00</td>
+                                                        <td class="px-2 py-2">Desconto de 25%</td>
                                                     </tr>
                                                     <tr>
-                                                        <td class="px-2 py-2">Acima de 4.664,68</td>
-                                                        <td class="px-2 py-2">27,5%</td>
-                                                        <td class="px-2 py-2">R$ 908,73</td>
+                                                        <td class="px-2 py-2">De R$ 6.500,01 até R$ 7.350,00</td>
+                                                        <td class="px-2 py-2">Desconto de 10%</td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td class="px-2 py-2">Acima de R$ 7.350,00</td>
+                                                        <td class="px-2 py-2">Alíquota de 27,5% (Sem desconto extra)
+                                                        </td>
                                                     </tr>
                                                 </tbody>
                                             </table>
@@ -917,7 +914,7 @@
                         <div class="result-row" style="background:#e3f2fd; border-bottom:1px solid #bbdefb;">
                             <span class="result-label" title="Substitui INSS e dependentes no cálculo da base">(-) Desc.
                                 Simplificado**</span>
-                            <span class="result-value negative-value" id="simp-desconto">R$ 607,20</span>
+                            <span class="result-value negative-value" id="simp-desconto">R$ 1.250,00</span>
                         </div>
                         <div class="result-row base-highlight-row">
                             <span class="result-label">= BASE IRRF</span>
@@ -933,53 +930,48 @@
                         </div>
                         <div style="font-size:0.7rem; color:#888; margin-top:5px; line-height:1.2;">
                             * O INSS ainda é descontado do salário, apenas não é usado para abater a base do IRRF.<br>
-                            ** Valor fixo de 25% da faixa isenta (R$ 607,20).
+                            ** Valor fixo de 25% da faixa isenta (R$ 1.250,00).
                         </div>
                     </div>
                 </div>
 
                 <!-- Footer Tabela -->
                 <div class="reference-table-container">
-                    <div class="reference-title" onclick="toggleTablePL()">Ver Tabela IRRF (Maio/2025) ▼</div>
+                    <div class="reference-title" onclick="toggleTablePL()">Ver Tabela IRRF 2026 ▼</div>
                     <table class="reference-table" id="tabela-irrf-pl">
                         <thead>
                             <tr>
-                                <th>Base de Cálculo (R$)</th>
-                                <th>Alíquota</th>
-                                <th>Dedução (R$)</th>
+                                <th>Faixa de Rendimento (Base)</th>
+                                <th>Desconto de IR</th>
                             </tr>
                         </thead>
                         <tbody>
                             <tr>
-                                <td>Até 2.428,80</td>
-                                <td>Isento</td>
-                                <td>0,00</td>
+                                <td>Até R$ 5.000,00</td>
+                                <td>Isenção total</td>
                             </tr>
                             <tr>
-                                <td>2.428,81 a 2.826,65</td>
-                                <td>7,5%</td>
-                                <td>182,16</td>
+                                <td>De R$ 5.000,01 até R$ 5.500,00</td>
+                                <td>75% de desconto</td>
                             </tr>
                             <tr>
-                                <td>2.826,66 a 3.751,05</td>
-                                <td>15,0%</td>
-                                <td>394,16</td>
+                                <td>De R$ 5.500,01 até R$ 6.000,00</td>
+                                <td>50% de desconto</td>
                             </tr>
                             <tr>
-                                <td>3.751,06 a 4.664,68</td>
-                                <td>22,5%</td>
-                                <td>675,49</td>
+                                <td>De R$ 6.000,01 até R$ 6.500,00</td>
+                                <td>25% de desconto</td>
                             </tr>
                             <tr>
-                                <td>Acima de 4.664,68</td>
-                                <td>27,5%</td>
-                                <td><strong>908,73</strong></td>
+                                <td>De R$ 6.500,01 até R$ 7.350,00</td>
+                                <td>10% de desconto</td>
+                            </tr>
+                            <tr>
+                                <td>Acima de R$ 7.350,00</td>
+                                <td>Tabela Padrão (27,5%...)</td>
                             </tr>
                         </tbody>
                     </table>
-                    <div style="text-align:center; font-size:0.8rem; color:#7f8c8d; margin-top:5px;">
-                        Desconto Simplificado estimado: R$ 607,20 (25% do limite isento)
-                    </div>
                 </div>
             </div>
         </div>
@@ -1915,39 +1907,35 @@
 
             const totDep = numDeps * 189.59;
             const baseLeg = Math.max(0, sal - inss - totDep - ded);
-            const baseSimp = Math.max(0, sal - 607.20);
+            const baseSimp = Math.max(0, sal - 1250.00);
 
-            // ===== CÁLCULO IRRF 2026 - Lei nº 15.270/2025 =====
+            // ===== CÁLCULO IRRF 2026 - REFORMA =====
             const calcI = (b) => {
-                // 1. Isenção total até R$ 5.000,00
+                // Cálculo base pela tabela progressiva "antiga" (vigente para fins de cálculo bruto)
+                let irrf_bruto = 0;
+                let a = 0, d = 0;
+
+                if (b > 4664.68) { a = 0.275; d = 908.73; }
+                else if (b > 3751.05) { a = 0.225; d = 675.49; }
+                else if (b > 2826.65) { a = 0.150; d = 394.16; }
+                else if (b > 2428.80) { a = 0.075; d = 182.16; }
+
+                irrf_bruto = (b * a) - d;
+                if (irrf_bruto < 0) irrf_bruto = 0;
+
+                // Aplicação das novas regras de desconto/isenção 2026
                 if (b <= 5000.00) {
-                    return 0;
-                }
-                // 2. Redução progressiva entre R$ 5.000,01 e R$ 7.350,00
-                else if (b > 5000.00 && b <= 7350.00) {
-                    // Calcular pela tabela tradicional
-                    let a = 0, d = 0;
-                    if (b > 4664.68) { a = 0.275; d = 908.73; }
-                    else if (b > 3751.05) { a = 0.225; d = 675.49; }
-                    else if (b > 2826.65) { a = 0.15; d = 394.16; }
-                    else if (b > 2428.80) { a = 0.075; d = 182.16; }
-
-                    let irrf_tabela = (b * a) - d;
-
-                    // Aplicar redutor: 978,62 - (0,133145 × base)
-                    let redutor = 978.62 - (0.133145 * b);
-
-                    // IRRF final não pode ser negativo
-                    return Math.max(0, irrf_tabela - redutor);
-                }
-                // 3. Tabela progressiva tradicional (acima de R$ 7.350,00)
-                else {
-                    let a = 0, d = 0;
-                    if (b > 4664.68) { a = 0.275; d = 908.73; }
-                    else if (b > 3751.05) { a = 0.225; d = 675.49; }
-                    else if (b > 2826.65) { a = 0.15; d = 394.16; }
-                    else if (b > 2428.80) { a = 0.075; d = 182.16; }
-                    return Math.max(0, (b * a) - d);
+                    return 0; // Isenção total
+                } else if (b <= 5500.00) {
+                    return irrf_bruto * (1 - 0.75); // Desconto de 75%
+                } else if (b <= 6000.00) {
+                    return irrf_bruto * (1 - 0.50); // Desconto de 50%
+                } else if (b <= 6500.00) {
+                    return irrf_bruto * (1 - 0.25); // Desconto de 25%
+                } else if (b <= 7350.00) {
+                    return irrf_bruto * (1 - 0.10); // Desconto de 10%
+                } else {
+                    return irrf_bruto; // Sem desconto adicional
                 }
             };
             // ===== FIM CÁLCULO IRRF 2026 =====
@@ -2027,24 +2015,27 @@
                 let regra = "";
 
                 // ===== NOVA LÓGICA IRRF 2026 =====
-                // 1. Isenção total até R$ 5.000,00
-                if (bIRRF <= IRRF_ISENCAO_2026) {
+                let f = IRRF_FAIXAS.find(x => bIRRF <= x.ate) || IRRF_FAIXAS[IRRF_FAIXAS.length - 1];
+                let irrf_bruto = round2((bIRRF * f.aliq) - f.ded);
+                if (irrf_bruto < 0) irrf_bruto = 0;
+
+                if (bIRRF <= 5000.00) {
                     i = 0;
                     regra = dLeg >= DED_SIMPL ? "Legal + Isenção" : "Simplif. + Isenção";
-                }
-                // 2. Redução progressiva (R$ 5.000,01 a R$ 7.350,00)
-                else if (bIRRF > IRRF_ISENCAO_2026 && bIRRF <= IRRF_LIMITE_REDUTOR) {
-                    let f = IRRF_FAIXAS.find(x => bIRRF <= x.ate) || IRRF_FAIXAS[IRRF_FAIXAS.length - 1];
-                    let irrf_tabela = round2((bIRRF * f.aliq) - f.ded);
-                    let redutor = IRRF_REDUTOR_CONSTANTE - (IRRF_REDUTOR_FATOR * bIRRF);
-                    i = clampMin0(Math.max(0, irrf_tabela - redutor));
-                    regra = dLeg >= DED_SIMPL ? "Legal + Redutor" : "Simplif. + Redutor";
-                }
-                // 3. Tabela progressiva tradicional (> R$ 7.350,00)
-                else {
-                    let f = IRRF_FAIXAS.find(x => bIRRF <= x.ate) || IRRF_FAIXAS[IRRF_FAIXAS.length - 1];
-                    i = round2((bIRRF * f.aliq) - f.ded);
-                    i = clampMin0(i);
+                } else if (bIRRF <= 5500.00) {
+                    i = round2(irrf_bruto * (1 - 0.75));
+                    regra = "Desc. 75%";
+                } else if (bIRRF <= 6000.00) {
+                    i = round2(irrf_bruto * (1 - 0.50));
+                    regra = "Desc. 50%";
+                } else if (bIRRF <= 6500.00) {
+                    i = round2(irrf_bruto * (1 - 0.25));
+                    regra = "Desc. 25%";
+                } else if (bIRRF <= 7350.00) {
+                    i = round2(irrf_bruto * (1 - 0.10));
+                    regra = "Desc. 10%";
+                } else {
+                    i = irrf_bruto;
                     regra = dLeg >= DED_SIMPL ? "Legal" : "Simplif.";
                 }
                 // ===== FIM NOVA LÓGICA IRRF 2026 =====
@@ -2308,24 +2299,27 @@
                 let regra = "";
 
                 // ===== NOVA LÓGICA IRRF 2026 =====
-                // 1. Isenção total até R$ 5.000,00
-                if (bIRRF <= IRRF_ISENCAO_2026) {
+                let f = IRRF_FAIXAS.find(x => bIRRF <= x.ate) || IRRF_FAIXAS[IRRF_FAIXAS.length - 1];
+                let irrf_bruto = round2((bIRRF * f.aliq) - f.ded);
+                if (irrf_bruto < 0) irrf_bruto = 0;
+
+                if (bIRRF <= 5000.00) {
                     i = 0;
                     regra = dLeg >= DED_SIMPL ? "Legal + Isenção" : "Simplif. + Isenção";
-                }
-                // 2. Redução progressiva (R$ 5.000,01 a R$ 7.350,00)
-                else if (bIRRF > IRRF_ISENCAO_2026 && bIRRF <= IRRF_LIMITE_REDUTOR) {
-                    let f = IRRF_FAIXAS.find(x => bIRRF <= x.ate) || IRRF_FAIXAS[IRRF_FAIXAS.length - 1];
-                    let irrf_tabela = round2((bIRRF * f.aliq) - f.ded);
-                    let redutor = IRRF_REDUTOR_CONSTANTE - (IRRF_REDUTOR_FATOR * bIRRF);
-                    i = clampMin0(Math.max(0, irrf_tabela - redutor));
-                    regra = dLeg >= DED_SIMPL ? "Legal + Redutor" : "Simplif. + Redutor";
-                }
-                // 3. Tabela progressiva tradicional (> R$ 7.350,00)
-                else {
-                    let f = IRRF_FAIXAS.find(x => bIRRF <= x.ate) || IRRF_FAIXAS[IRRF_FAIXAS.length - 1];
-                    i = round2((bIRRF * f.aliq) - f.ded);
-                    i = clampMin0(i);
+                } else if (bIRRF <= 5500.00) {
+                    i = round2(irrf_bruto * (1 - 0.75));
+                    regra = "Desc. 75%";
+                } else if (bIRRF <= 6000.00) {
+                    i = round2(irrf_bruto * (1 - 0.50));
+                    regra = "Desc. 50%";
+                } else if (bIRRF <= 6500.00) {
+                    i = round2(irrf_bruto * (1 - 0.25));
+                    regra = "Desc. 25%";
+                } else if (bIRRF <= 7350.00) {
+                    i = round2(irrf_bruto * (1 - 0.10));
+                    regra = "Desc. 10%";
+                } else {
+                    i = irrf_bruto;
                     regra = dLeg >= DED_SIMPL ? "Legal" : "Simplif.";
                 }
                 // ===== FIM NOVA LÓGICA IRRF 2026 =====
@@ -3015,63 +3009,53 @@
                 const deducao_dep = getValorNum(el.clt_dependentes_irrf) * DEDUCAO_DEPENDENTE_IRRF;
                 c.base_irrf = c.total_proventos - c.desc_inss - deducao_dep - (c.faltas_valor + c.faltas_dsr_valor + c.atrasos_valor);
 
-                const base_simp = (c.total_proventos - (c.faltas_valor + c.faltas_dsr_valor + c.atrasos_valor)) - 607.20;
+                const base_simp = (c.total_proventos - (c.faltas_valor + c.faltas_dsr_valor + c.atrasos_valor)) - 1250.00;
 
-                // ===== NOVA LÓGICA IRRF 2026 - Lei nº 15.270/2025 =====
-                let irrf_norm = 0;
-                let metodo_aplicado = "";
+                // ===== NOVA LÓGICA IRRF 2026 - Reforma =====
 
-                // 1. Verificar isenção total (até R$ 5.000,00)
-                if (c.base_irrf <= IRRF_ISENCAO_2026) {
-                    irrf_norm = 0;
-                    metodo_aplicado = "Isenção Legal 2026";
+                // Função auxiliar para calcular o IRRF com as regras de 2026
+                function calcularIRRF2026(base) {
+                    // 1. Calcular IRRF pela tabela progressiva "padrão" (bruto)
+                    let f = TABELA_IRRF_2026.find(x => base <= x.teto) || TABELA_IRRF_2026[4];
+                    let irrf_bruto = (base * f.aliquota) - f.deducao;
+                    if (irrf_bruto < 0) irrf_bruto = 0;
+
+                    let irrf_final = 0;
+                    let metodo = "";
+
+                    // 2. Aplicar descontos progressivos
+                    if (base <= 5000.00) {
+                        irrf_final = 0;
+                        metodo = "Isenção Total";
+                    } else if (base <= 5500.00) {
+                        irrf_final = irrf_bruto * (1 - 0.75);
+                        metodo = "Desconto de 75%";
+                    } else if (base <= 6000.00) {
+                        irrf_final = irrf_bruto * (1 - 0.50);
+                        metodo = "Desconto de 50%";
+                    } else if (base <= 6500.00) {
+                        irrf_final = irrf_bruto * (1 - 0.25);
+                        metodo = "Desconto de 25%";
+                    } else if (base <= 7350.00) {
+                        irrf_final = irrf_bruto * (1 - 0.10);
+                        metodo = "Desconto de 10%";
+                    } else {
+                        irrf_final = irrf_bruto;
+                        metodo = "Tabela Padrão";
+                    }
+                    return { valor: Math.max(0, irrf_final), metodo: metodo };
                 }
-                // 2. Verificar faixa de redução progressiva (R$ 5.000,01 a R$ 7.350,00)
-                else if (c.base_irrf > IRRF_ISENCAO_2026 && c.base_irrf <= IRRF_LIMITE_REDUTOR) {
-                    // Calcular IRRF pela tabela tradicional
-                    let f = TABELA_IRRF_2026.find(x => c.base_irrf <= x.teto) || TABELA_IRRF_2026[4];
-                    let irrf_tabela = (c.base_irrf * f.aliquota) - f.deducao;
 
-                    // Calcular redutor: 978,62 - (0,133145 × base IRRF)
-                    let redutor = IRRF_REDUTOR_CONSTANTE - (IRRF_REDUTOR_FATOR * c.base_irrf);
+                const resLegal = calcularIRRF2026(c.base_irrf);
+                const resSimp = calcularIRRF2026(base_simp);
 
-                    // IRRF final = IRRF tabela - redutor (não pode ser negativo)
-                    irrf_norm = Math.max(0, irrf_tabela - redutor);
-                    metodo_aplicado = "Redução Progressiva (Redutor)";
-                }
-                // 3. Tabela progressiva tradicional (acima de R$ 7.350,00)
-                else {
-                    let f = TABELA_IRRF_2026.find(x => c.base_irrf <= x.teto) || TABELA_IRRF_2026[4];
-                    irrf_norm = (c.base_irrf * f.aliquota) - f.deducao;
-                    metodo_aplicado = "Tabela Progressiva Tradicional";
-                }
-
-                // Calcular IRRF simplificado para comparação
-                let irrf_simp = 0;
-                let metodo_simp = "Simplificado";
-
-                if (base_simp <= IRRF_ISENCAO_2026) {
-                    irrf_simp = 0;
-                    metodo_simp = "Simplificado + Isenção 2026";
-                } else if (base_simp > IRRF_ISENCAO_2026 && base_simp <= IRRF_LIMITE_REDUTOR) {
-                    let f = TABELA_IRRF_2026.find(x => base_simp <= x.teto) || TABELA_IRRF_2026[4];
-                    let irrf_tabela = (base_simp * f.aliquota) - f.deducao;
-                    let redutor = IRRF_REDUTOR_CONSTANTE - (IRRF_REDUTOR_FATOR * base_simp);
-                    irrf_simp = Math.max(0, irrf_tabela - redutor);
-                    metodo_simp = "Simplificado + Redutor";
+                // Comparar qual é mais vantajoso (menor imposto)
+                if (resLegal.valor <= resSimp.valor) {
+                    c.desc_irrf = resLegal.valor;
+                    c.metodo_irrf = resLegal.metodo + " (Ded. Legal)";
                 } else {
-                    let f = TABELA_IRRF_2026.find(x => base_simp <= x.teto) || TABELA_IRRF_2026[4];
-                    irrf_simp = (base_simp * f.aliquota) - f.deducao;
-                    metodo_simp = "Simplificado";
-                }
-
-                // Escolher o menor IRRF (como era antes, mas agora com nova lógica)
-                if (irrf_norm < irrf_simp && irrf_norm >= 0) {
-                    c.desc_irrf = irrf_norm;
-                    c.metodo_irrf = metodo_aplicado;
-                } else {
-                    c.desc_irrf = Math.max(0, irrf_simp);
-                    c.metodo_irrf = metodo_simp;
+                    c.desc_irrf = resSimp.valor;
+                    c.metodo_irrf = resSimp.metodo + " (Simplificado)";
                 }
                 // ===== FIM NOVA LÓGICA IRRF 2026 =====
 
@@ -3735,13 +3719,13 @@
                 if (els.detINSS) els.detINSS.textContent = "- " + format(descINSS);
 
 
-                // --- PASSO 7: IRRF (Maio 2025) ---
+                // --- PASSO 7: IRRF 2026 (Atualizado) ---
                 // 1. Dedução Legal
-                const deducaoDependentes = ndeps * DEDUCAO_DEPENDENTE_IRRF;
+                const deducaoDependentes = ndeps * 189.59;
                 const deducaoLegalTotal = descINSS + deducaoDependentes;
 
-                // 2. Dedução Simplificada
-                const deducaoSimplificada = 607.20;
+                // 2. Dedução Simplificada (R$ 1.250,00 = 25% de 5000)
+                const deducaoSimplificada = 1250.00;
 
                 // 3. Maior Dedução
                 const deducaoUsada = Math.max(deducaoLegalTotal, deducaoSimplificada);
@@ -3750,25 +3734,42 @@
                 // Salário Família é ISENTO de IRRF
                 const baseIRRF = Math.max(0, totalBruto - valSalFamilia - deducaoUsada);
 
-                // 5. Tabela Progressiva
-                let irrfCalculado = 0;
-                const faixaIRRF = TABELA_IRRF_2025_MAIO.find(f => baseIRRF <= f.teto) || TABELA_IRRF_2025_MAIO[TABELA_IRRF_2025_MAIO.length - 1];
+                // 5. Cálculo Progressivo com Descontos 2026
+                // Tabela Padrão (usa-se a tabela antiga para calcular o imposto bruto)
+                let f = TABELA_IRRF_2025_MAIO.find(x => baseIRRF <= x.teto) || TABELA_IRRF_2025_MAIO[4];
+                let irrf_bruto = (baseIRRF * f.aliquota) - f.deducao;
+                if (irrf_bruto < 0) irrf_bruto = 0;
 
-                if (faixaIRRF.aliquota > 0) {
-                    irrfCalculado = (baseIRRF * faixaIRRF.aliquota) - faixaIRRF.deducao;
+                let irrf_final = 0;
+                let metodo = "";
+
+                if (baseIRRF <= 5000.00) {
+                    irrf_final = 0;
+                    metodo = "Isenção Total";
+                } else if (baseIRRF <= 5500.00) {
+                    irrf_final = irrf_bruto * (1 - 0.75); // 75% desconto
+                    metodo = "Desconto 75%";
+                } else if (baseIRRF <= 6000.00) {
+                    irrf_final = irrf_bruto * (1 - 0.50); // 50% desconto
+                    metodo = "Desconto 50%";
+                } else if (baseIRRF <= 6500.00) {
+                    irrf_final = irrf_bruto * (1 - 0.25); // 25% desconto
+                    metodo = "Desconto 25%";
+                } else if (baseIRRF <= 7350.00) {
+                    irrf_final = irrf_bruto * (1 - 0.10); // 10% desconto
+                    metodo = "Desconto 10%";
+                } else {
+                    irrf_final = irrf_bruto;
+                    metodo = "Tabela Padrão";
                 }
 
-                // 6. Regra de Minimis (< 10.00 = 0)
-                if (irrfCalculado < 10) {
-                    irrfCalculado = 0;
-                }
-
+                let irrfCalculado = irrf_final;
                 let tipoIRRF = (deducaoSimplificada > deducaoLegalTotal) ? "Simplificado" : "Legal";
                 if (irrfCalculado === 0) tipoIRRF = "Isento";
 
                 if (els.detIRRF) els.detIRRF.textContent = "- " + format(irrfCalculado);
                 if (els.badgeIRRF) {
-                    els.badgeIRRF.textContent = tipoIRRF;
+                    els.badgeIRRF.textContent = tipoIRRF + (metodo !== "Tabela Padrão" && metodo !== "Isenção Total" ? " (" + metodo + ")" : "");
                     els.badgeIRRF.className = "ml-2 text-[10px] uppercase font-bold px-1.5 py-0.5 rounded " + (irrfCalculado > 0 ? "bg-blue-100 text-blue-700 block" : "bg-green-100 text-green-700 block");
                 }
 
