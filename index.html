@@ -1952,39 +1952,58 @@
             const baseLeg = Math.max(0, sal - inss - totDep - ded);
             const baseSimp = Math.max(0, sal - 1250.00);
 
-            // ===== CÁLCULO IRRF 2026 - REFORMA =====
-            const calcI = (b) => {
-                // Cálculo base pela tabela progressiva "antiga" (vigente para fins de cálculo bruto)
-                let irrf_bruto = 0;
-                let a = 0, d = 0;
+            // ===== CÁLCULO IRRF 2026 - Art. 6º-A da Lei 9.250/1995 =====
+            const calcI = (base_tributavel, deducoes) => {
+                // PASSO 1: Dedução já foi escolhida (maior entre legal e simplificado)
+                // PASSO 2: Calcular Base de Cálculo do IR
+                const base_irrf = Math.max(0, base_tributavel - deducoes);
 
-                if (b > 4664.68) { a = 0.275; d = 908.73; }
-                else if (b > 3751.05) { a = 0.225; d = 675.49; }
-                else if (b > 2826.65) { a = 0.150; d = 394.16; }
-                else if (b > 2428.80) { a = 0.075; d = 182.16; }
+                // PASSO 3: Calcular IR pela Tabela Progressiva
+                let aliq = 0, ded = 0;
+                if (base_irrf > 4664.68) { aliq = 0.275; ded = 908.73; }
+                else if (base_irrf > 3751.05) { aliq = 0.225; ded = 675.49; }
+                else if (base_irrf > 2826.65) { aliq = 0.150; ded = 394.16; }
+                else if (base_irrf > 2428.80) { aliq = 0.075; ded = 182.16; }
 
-                irrf_bruto = (b * a) - d;
-                if (irrf_bruto < 0) irrf_bruto = 0;
+                let ir_tabela = (base_irrf * aliq) - ded;
+                if (ir_tabela < 0) ir_tabela = 0;
 
-                // Aplicação das novas regras de desconto/isenção 2026
-                if (b <= 5000.00) {
-                    return 0; // Isenção total
-                } else if (b <= 5500.00) {
-                    return irrf_bruto * (1 - 0.75); // Desconto de 75%
-                } else if (b <= 6000.00) {
-                    return irrf_bruto * (1 - 0.50); // Desconto de 50%
-                } else if (b <= 6500.00) {
-                    return irrf_bruto * (1 - 0.25); // Desconto de 25%
-                } else if (b <= 7350.00) {
-                    return irrf_bruto * (1 - 0.10); // Desconto de 10%
+                // Se IR for zero, retornar
+                if (ir_tabela <= 0) return 0;
+
+                // PASSO 4: Definir valor de renda para redução
+                // ⚠️ CRÍTICO: Usa o SALÁRIO BRUTO TRIBUTÁVEL, NÃO a base de cálculo
+                const renda_reducao = base_tributavel;
+
+                // PASSO 5: Aplicar Redução conforme Faixa
+                let reducao = 0;
+
+                if (renda_reducao <= 5000.00) {
+                    // Faixa 1: Até R$ 5.000,00 - Isenção Total
+                    reducao = Math.min(ir_tabela, 312.89);
+                } else if (renda_reducao <= 7350.00) {
+                    // Faixa 2: R$ 5.000,01 até R$ 7.350,00 - Fórmula
+                    reducao = 978.62 - (0.133145 * renda_reducao);
+                    if (reducao < 0) reducao = 0;
+                    if (reducao > ir_tabela) reducao = ir_tabela;
                 } else {
-                    return irrf_bruto; // Sem desconto adicional
+                    // Faixa 3: Acima de R$ 7.350,00 - Sem redução
+                    reducao = 0;
                 }
+
+                // Calcular IR Final
+                return Math.max(0, ir_tabela - reducao);
             };
             // ===== FIM CÁLCULO IRRF 2026 =====
 
-            const iLeg = calcI(baseLeg);
-            const iSimp = calcI(baseSimp);
+            // Calcular IRRF para dedução legal
+            const deducoes_legais = inss + totDep + ded;
+            const iLeg = calcI(sal, deducoes_legais);
+
+            // Calcular IRRF para dedução simplificada (R$ 607,20)
+            const deducao_simplificada = 607.20;
+            const iSimp = calcI(sal, deducao_simplificada);
+
             const lLeg = sal - inss - iLeg;
             const lSimp = sal - inss - iSimp;
 
@@ -2051,39 +2070,54 @@
 
             function calcularIRRF(base, inss, deps) {
                 if (base <= 0) return { baseIRRF: 0, irrf: 0, dedAp: 0, regra: "-" };
+
+                // PASSO 1: Definir tipo de dedução
                 const dLeg = round2(inss + (Math.max(0, Math.floor(deps)) * DED_DEP));
-                const dAp = dLeg >= DED_SIMPL ? dLeg : DED_SIMPL;
+                const dAp = Math.max(dLeg, DED_SIMPL); // Usar a MAIOR dedução
+                const tipo_deducao = (dLeg >= DED_SIMPL) ? "Legal" : "Simplif.";
+
+                // PASSO 2: Calcular Base de Cálculo do IR
                 const bIRRF = Math.max(0, round2(base - dAp));
-                let i = 0;
-                let regra = "";
 
-                // ===== NOVA LÓGICA IRRF 2026 =====
+                // PASSO 3: Calcular IR pela Tabela Progressiva
                 let f = IRRF_FAIXAS.find(x => bIRRF <= x.ate) || IRRF_FAIXAS[IRRF_FAIXAS.length - 1];
-                let irrf_bruto = round2((bIRRF * f.aliq) - f.ded);
-                if (irrf_bruto < 0) irrf_bruto = 0;
+                let ir_tabela = round2((bIRRF * f.aliq) - f.ded);
+                if (ir_tabela < 0) ir_tabela = 0;
 
-                if (bIRRF <= 5000.00) {
-                    i = 0;
-                    regra = dLeg >= DED_SIMPL ? "Legal + Isenção" : "Simplif. + Isenção";
-                } else if (bIRRF <= 5500.00) {
-                    i = round2(irrf_bruto * (1 - 0.75));
-                    regra = "Desc. 75%";
-                } else if (bIRRF <= 6000.00) {
-                    i = round2(irrf_bruto * (1 - 0.50));
-                    regra = "Desc. 50%";
-                } else if (bIRRF <= 6500.00) {
-                    i = round2(irrf_bruto * (1 - 0.25));
-                    regra = "Desc. 25%";
-                } else if (bIRRF <= 7350.00) {
-                    i = round2(irrf_bruto * (1 - 0.10));
-                    regra = "Desc. 10%";
-                } else {
-                    i = irrf_bruto;
-                    regra = dLeg >= DED_SIMPL ? "Legal" : "Simplif.";
+                // Se IR for zero, retornar
+                if (ir_tabela <= 0) {
+                    return { baseIRRF: bIRRF, irrf: 0, dedAp: dAp, regra: `Isento (${tipo_deducao})` };
                 }
-                // ===== FIM NOVA LÓGICA IRRF 2026 =====
 
+                // PASSO 4: Definir valor de renda para redução
+                // ⚠️ CRÍTICO: Usa o SALÁRIO BRUTO TRIBUTÁVEL, NÃO a base de cálculo
+                const renda_reducao = base;
+
+                // PASSO 5: Aplicar Redução conforme Faixa
+                let reducao = 0;
+                let metodo_reducao = "";
+
+                if (renda_reducao <= 5000.00) {
+                    // Faixa 1: Até R$ 5.000,00 - Isenção Total
+                    reducao = Math.min(ir_tabela, 312.89);
+                    metodo_reducao = "Isenção Total";
+                } else if (renda_reducao <= 7350.00) {
+                    // Faixa 2: R$ 5.000,01 até R$ 7.350,00 - Fórmula
+                    reducao = 978.62 - (0.133145 * renda_reducao);
+                    if (reducao < 0) reducao = 0;
+                    if (reducao > ir_tabela) reducao = ir_tabela;
+                    metodo_reducao = "Redução Progressiva";
+                } else {
+                    // Faixa 3: Acima de R$ 7.350,00 - Sem redução
+                    reducao = 0;
+                    metodo_reducao = "Tabela Padrão";
+                }
+
+                // Calcular IR Final
+                let i = round2(ir_tabela - reducao);
                 if (i < 10) i = 0;
+
+                const regra = `${metodo_reducao} (${tipo_deducao})`;
                 return { baseIRRF: bIRRF, irrf: i, dedAp: dAp, regra };
             }
 
