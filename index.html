@@ -1943,6 +1943,22 @@
             const numDeps = parseInt(document.getElementById('pl_dependentes').value) || 0;
             const ded = parseFloat(document.getElementById('pl_deducoes').value) || 0;
 
+            // ===== CONSTANTES IRRF 2026 (Idênticas ao CLT) =====
+            const TABELA_IRRF_2026 = [
+                { teto: 2428.80, aliquota: 0, deducao: 0 },
+                { teto: 2826.65, aliquota: 0.075, deducao: 182.16 },
+                { teto: 3751.05, aliquota: 0.15, deducao: 394.16 },
+                { teto: 4664.68, aliquota: 0.225, deducao: 675.49 },
+                { teto: Infinity, aliquota: 0.275, deducao: 908.73 }
+            ];
+
+            const LIMITE_DESCONTO_SIMPLIFICADO = 607.20;
+            const FATOR_REDUCAO = 0.133145;
+            const VALOR_MAXIMO_REDUCAO = 978.62;
+            const REDUCAO_FIXA_MAXIMA = 312.89;
+            const LIMITE_SUPERIOR_REDUCAO = 7350.00;
+            const LIMITE_ISENCAO_TOTAL = 5000.00;
+
             const teto = 8475.55; // Teto INSS 2026 Oficial
             const baseInss = Math.min(sal, teto);
             const inssCap = 932.31; // Teto para contribuintes (11% de 8475.55)
@@ -1950,22 +1966,18 @@
 
             const totDep = numDeps * 189.59;
             const baseLeg = Math.max(0, sal - inss - totDep - ded);
-            const baseSimp = Math.max(0, sal - 1250.00);
+            const baseSimp = Math.max(0, sal - LIMITE_DESCONTO_SIMPLIFICADO);
 
             // ===== CÁLCULO IRRF 2026 - Art. 6º-A da Lei 9.250/1995 =====
             const calcI = (base_tributavel, deducoes) => {
-                // PASSO 1: Dedução já foi escolhida (maior entre legal e simplificado)
+                // PASSO 1: Dedução já foi tratada (parâmetro 'deducoes')
+
                 // PASSO 2: Calcular Base de Cálculo do IR
                 const base_irrf = Math.max(0, base_tributavel - deducoes);
 
                 // PASSO 3: Calcular IR pela Tabela Progressiva
-                let aliq = 0, ded = 0;
-                if (base_irrf > 4664.68) { aliq = 0.275; ded = 908.73; }
-                else if (base_irrf > 3751.05) { aliq = 0.225; ded = 675.49; }
-                else if (base_irrf > 2826.65) { aliq = 0.150; ded = 394.16; }
-                else if (base_irrf > 2428.80) { aliq = 0.075; ded = 182.16; }
-
-                let ir_tabela = (base_irrf * aliq) - ded;
+                let f = TABELA_IRRF_2026.find(x => base_irrf <= x.teto) || TABELA_IRRF_2026[4];
+                let ir_tabela = (base_irrf * f.aliquota) - f.deducao;
                 if (ir_tabela < 0) ir_tabela = 0;
 
                 // Se IR for zero, retornar
@@ -1978,12 +1990,12 @@
                 // PASSO 5: Aplicar Redução conforme Faixa
                 let reducao = 0;
 
-                if (renda_reducao <= 5000.00) {
+                if (renda_reducao <= LIMITE_ISENCAO_TOTAL) {
                     // Faixa 1: Até R$ 5.000,00 - Isenção Total
-                    reducao = Math.min(ir_tabela, 312.89);
-                } else if (renda_reducao <= 7350.00) {
+                    reducao = Math.min(ir_tabela, REDUCAO_FIXA_MAXIMA);
+                } else if (renda_reducao <= LIMITE_SUPERIOR_REDUCAO) {
                     // Faixa 2: R$ 5.000,01 até R$ 7.350,00 - Fórmula
-                    reducao = 978.62 - (0.133145 * renda_reducao);
+                    reducao = VALOR_MAXIMO_REDUCAO - (FATOR_REDUCAO * renda_reducao);
                     if (reducao < 0) reducao = 0;
                     if (reducao > ir_tabela) reducao = ir_tabela;
                 } else {
@@ -2000,9 +2012,8 @@
             const deducoes_legais = inss + totDep + ded;
             const iLeg = calcI(sal, deducoes_legais);
 
-            // Calcular IRRF para dedução simplificada (R$ 607,20)
-            const deducao_simplificada = 607.20;
-            const iSimp = calcI(sal, deducao_simplificada);
+            // Calcular IRRF para dedução simplificada
+            const iSimp = calcI(sal, LIMITE_DESCONTO_SIMPLIFICADO);
 
             const lLeg = sal - inss - iLeg;
             const lSimp = sal - inss - iSimp;
@@ -2017,6 +2028,10 @@
 
             document.getElementById('simp-bruto').innerText = formatarMoeda(sal);
             document.getElementById('simp-inss-info').innerText = "- " + formatarMoeda(inss);
+            // Atualiza o valor do desconto simplificado na interface
+            if (document.getElementById('simp-desconto')) {
+                document.getElementById('simp-desconto').innerText = "- " + formatarMoeda(LIMITE_DESCONTO_SIMPLIFICADO);
+            }
             document.getElementById('simp-base').innerText = formatarMoeda(baseSimp);
             document.getElementById('simp-irrf').innerText = "- " + formatarMoeda(iSimp);
             document.getElementById('simp-liquido').innerText = formatarMoeda(lSimp);
