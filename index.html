@@ -3202,6 +3202,8 @@
                 // ===== FIM LÓGICA IRRF 2026 =====
 
                 let valsNT = { prov: 0, desc: 0, liquido: 0 };
+                window.clt_remuneracao_atual = c.total_proventos;
+                window.clt_salario_base_atual = c.salario_base;
                 if (typeof window.clt_calcularVerbasNaoTributaveis === 'function') {
                     valsNT = window.clt_calcularVerbasNaoTributaveis();
                 }
@@ -3385,19 +3387,25 @@
                     const row = document.createElement("div");
                     row.className = "percent-row";
                     row.dataset.baseType = "remuneracao";
+
+                    const baseLabelText = "Remuneracao da calculadora";
+
                     row.innerHTML = `
                         <div class="percent-row-main">
                             <input type="text" placeholder="Descrição (Ex.: Prêmio 10%)">
                             <input type="number" min="0" step="0.01" placeholder="%" data-role="clt_prov-percent">
                             <div class="value-pill">R$ 0,00</div>
-                            <span></span>
+                            <button type="button" class="btn-icon" title="Editar base de cálculo">✏️</button>
                             <button type="button" class="remove-btn">remover</button>
                         </div>
+                        <div class="base-label">Base: <strong>${baseLabelText}</strong></div>
                     `;
-                    const perc = row.querySelector("input[type='number']");
+                    const perc = row.querySelector("input[data-role='clt_prov-percent']");
+                    const editBaseBtn = row.querySelector(".btn-icon");
                     const removeBtn = row.querySelector(".remove-btn");
 
                     perc.addEventListener("input", window.clt_calcularTudo);
+                    editBaseBtn.addEventListener("click", () => openBaseModalForRow(row));
                     removeBtn.addEventListener("click", () => {
                         provPercentContainer.removeChild(row);
                         window.clt_calcularTudo();
@@ -3523,16 +3531,26 @@
                     }
 
                     let provPercent = 0;
-                    const dummyRowRem = document.createElement('div');
-                    dummyRowRem.dataset.baseType = 'remuneracao';
-                    const baseRemuneracao = 0;
 
                     if (provPercentContainer) {
-                        provPercentContainer.querySelectorAll("input[data-role='clt_prov-percent']").forEach(el => {
-                            const perc = parseNum(el.value);
-                            const val = baseRemuneracao * (perc / 100);
+                        provPercentContainer.querySelectorAll(".percent-row").forEach(row => {
+                            const percInput = row.querySelector("input[data-role='clt_prov-percent']");
+                            if (!percInput) return;
+                            const perc = parseNum(percInput.value);
 
-                            const row = el.closest(".percent-row");
+                            const baseType = row.dataset.baseType || 'remuneracao';
+                            let base = 0;
+                            if (baseType === 'remuneracao') {
+                                base = window.clt_remuneracao_atual || 0;
+                            } else if (baseType === 'salarioBase') {
+                                base = window.clt_salario_base_atual || 0;
+                            } else if (baseType === 'custom') {
+                                base = parseNum(row.dataset.baseCustom || '0');
+                            } else {
+                                base = window.clt_remuneracao_atual || 0;
+                            }
+                            const val = base * (perc / 100);
+
                             const pill = row.querySelector(".value-pill");
                             if (pill) pill.textContent = formatBRL(val);
 
@@ -3554,7 +3572,17 @@
                             if (!percInput) return;
                             const perc = parseNum(percInput.value);
 
-                            const base = 0;
+                            const baseType = row.dataset.baseType || 'remuneracao';
+                            let base = 0;
+                            if (baseType === 'remuneracao') {
+                                base = window.clt_remuneracao_atual || 0;
+                            } else if (baseType === 'salarioBase') {
+                                base = window.clt_salario_base_atual || 0;
+                            } else if (baseType === 'custom') {
+                                base = parseNum(row.dataset.baseCustom || '0');
+                            } else {
+                                base = window.clt_remuneracao_atual || 0;
+                            }
                             const val = base * (perc / 100);
 
                             const pill = row.querySelector(".value-pill");
@@ -3585,6 +3613,7 @@
                     if (descPercentContainer) descPercentContainer.innerHTML = '';
 
                     createProvFixoRow();
+                    createProvPercentRow();
                     createDescFixoRow();
                     createDescPercentRow();
 
@@ -3592,6 +3621,7 @@
                 };
 
                 createProvFixoRow();
+                createProvPercentRow();
                 createDescFixoRow();
                 createDescPercentRow();
             });

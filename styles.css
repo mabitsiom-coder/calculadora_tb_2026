@@ -602,7 +602,7 @@
 
 .verbas-nt-wrapper .grid-2 {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(340px, 1fr));
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
     gap: 24px;
 }
 
@@ -630,8 +630,8 @@
 
 .verbas-nt-wrapper .row-fixo {
     display: grid;
-    grid-template-columns: 2fr 1fr auto;
-    gap: 8px;
+    grid-template-columns: 1.5fr 1fr auto;
+    gap: 6px;
     margin-bottom: 8px;
     align-items: center;
 }
@@ -646,20 +646,21 @@
 
 .verbas-nt-wrapper .percent-row-main {
     display: grid;
-    grid-template-columns: 2fr 0.8fr 1.2fr auto auto;
-    gap: 8px;
+    grid-template-columns: minmax(80px, 1.5fr) minmax(50px, 0.7fr) auto auto auto;
+    gap: 6px;
     align-items: center;
     margin-bottom: 6px;
 }
 
 .verbas-nt-wrapper input[type="text"],
 .verbas-nt-wrapper input[type="number"] {
-    padding: 10px 14px;
+    padding: 7px 8px;
     border-radius: 6px;
     border: 1px solid #d1d5db;
-    font-size: 0.875rem;
+    font-size: 0.8rem;
     width: 100%;
     box-sizing: border-box;
+    min-width: 0;
 }
 
 .verbas-nt-wrapper input:focus {
