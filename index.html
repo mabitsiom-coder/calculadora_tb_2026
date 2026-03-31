@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="pt-BR">
 
 <head>
@@ -2916,7 +2916,7 @@
             });
 
             function getValoresAdicionaisComplexos() {
-                const vals = { ins: 0, per: 0, per_reflexo: 0, tempo: 0, total: 0 };
+                const vals = { ins: 0, ins_base_he: 0, per: 0, per_base_he: 0, per_reflexo: 0, tempo: 0, total: 0 };
 
                 const linhaIns = document.getElementById("clt_insalubridade-row");
                 const ativoIns = document.getElementById("clt_insalubridade-ativo").checked;
@@ -2926,6 +2926,7 @@
                     const diasTrab = getValorNum(el.clt_dias_trabalhados);
                     const dias_efetivos_adic = Math.max(0, diasTrab - getValorNum(el.clt_faltas_dias));
                     vals.ins = (baseIns * (percIns / 100) / 30) * dias_efetivos_adic;
+                    vals.ins_base_he = (baseIns * (percIns / 100) / 30) * diasTrab;
                 }
                 document.getElementById("clt_insalubridade-valor").textContent = formatBRL(vals.ins);
 
@@ -2941,6 +2942,7 @@
                     const divisorPer = el.clt_ferias_ativo && el.clt_ferias_ativo.checked ? getValorNum(el.clt_dias_mes) : 30;
 
                     vals.per = (basePer * (percPer / 100) / divisorPer) * dias_efetivos_adic;
+                    vals.per_base_he = (basePer * (percPer / 100) / divisorPer) * diasTrab;
                 }
                 document.getElementById("clt_periculosidade-valor").textContent = formatBRL(vals.per);
 
@@ -3045,7 +3047,7 @@
                 c.comissoes_reflexo_dsr = c.adic_comissoes * c.fator_dsr;
                 c.quebra_caixa_valor = c.salario_proporcional * (getValorNum(el.clt_quebra_caixa_opt) / 100);
 
-                c.base_para_horas_extras = c.salario_base + c.periculosidade_valor + c.insalubridade_valor + c.tempo_valor + c.grat_funcao_valor + c.adic_comissoes;
+                c.base_para_horas_extras = c.salario_base + valsAdic.per_base_he + valsAdic.ins_base_he + c.tempo_valor + c.grat_funcao_valor + c.adic_comissoes;
                 const valor_hora_real = c.base_para_horas_extras / c.jornada_mes;
 
                 if (el.clt_editar_valor_hora.checked) {

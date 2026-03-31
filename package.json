@@ -1,0 +1,12 @@
+{
+  "name": "calculadora_tb_2026",
+  "version": "1.0.0",
+  "description": "Calculadora Trabalhista 2026",
+  "main": "index.html",
+  "scripts": {
+    "dev": "npx --yes live-server"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC"
+}
