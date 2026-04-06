@@ -500,20 +500,16 @@
                                                 0,00</span></label>
                                     </div>
                                     <div class="space-y-2 border-t pt-2">
-                                        <label class="block text-sm font-medium text-gray-700">Horas Extras
-                                            Variáveis</label>
-                                        <div class="flex gap-2">
-                                            <input type="number" id="clt_he_var_horas" placeholder="Horas" value="0"
-                                                class="block w-1/2 rounded-md border-gray-300 shadow-sm sm:text-sm">
-                                            <input type="number" id="clt_he_var_perc" placeholder="% (Ex: 50)"
-                                                value="50"
-                                                class="block w-1/2 rounded-md border-gray-300 shadow-sm sm:text-sm">
+                                        <div class="flex items-center justify-between">
+                                            <label class="block text-sm font-medium text-gray-700">Horas Extras Vari&#225;veis</label>
+                                            <button type="button" id="clt_btn_add_he_var"
+                                                title="Adicionar categoria de HE vari&#225;vel"
+                                                style="display:inline-flex;align-items:center;gap:4px;padding:2px 10px;border-radius:6px;border:1.5px solid #6366f1;background:#eef2ff;color:#4f46e5;font-size:0.82rem;font-weight:600;cursor:pointer;transition:background 0.15s;"
+                                                onmouseover="this.style.background='#e0e7ff'" onmouseout="this.style.background='#eef2ff'">
+                                                <span style="font-size:1.1rem;line-height:1;">+</span> Adicionar
+                                            </button>
                                         </div>
-                                        <label class="block text-xs font-medium text-gray-600">Valor HE Variável (R$):
-                                            <span id="clt_out_he_var_valor" class="font-bold">R$ 0,00</span></label>
-                                        <label class="flex items-center text-xs font-medium text-gray-600">Reflexo DSR
-                                            HE Var. (R$): <span id="clt_out_he_var_reflexo" class="font-bold">R$
-                                                0,00</span></label>
+                                        <div id="clt_he_var_container"></div>
                                     </div>
                                     <div class="space-y-2 border-t pt-4 mt-2">
                                         <label class="block text-sm font-medium text-gray-700">Total Horas Extras
@@ -2702,8 +2698,8 @@
                     'clt_out_inter_reflexo', 'clt_out_inter_total', 'clt_interjornada_horas', 'clt_out_interjornada_valor',
                     'clt_out_interjornada_total', 'clt_noturno_perc', 'clt_noturno_horas', 'clt_out_noturno_valor',
                     'clt_out_noturno_reflexo', 'clt_out_noturno_total', 'clt_he_100_horas', 'clt_out_he_100_valor',
-                    'clt_out_he_100_reflexo', 'clt_he_var_horas', 'clt_he_var_perc', 'clt_out_he_var_valor',
-                    'clt_out_he_var_reflexo', 'clt_out_he_total_valor', 'clt_out_he_total_reflexo', 'clt_out_he_total_geral',
+                    'clt_out_he_100_reflexo', 'clt_out_he_total_valor',
+                    'clt_out_he_total_reflexo', 'clt_out_he_total_geral',
                     'clt_faltas_dias', 'clt_out_faltas_valor', 'clt_faltas_dsr_dias', 'clt_out_faltas_dsr_valor',
                     'clt_atrasos_horas', 'clt_out_atrasos_valor', 'clt_adic_gratificacoes', 'clt_adic_comissoes',
                     'clt_out_comissoes_reflexo', 'clt_check_grat_funcao', 'clt_out_grat_funcao_valor',
@@ -2817,8 +2813,9 @@
                 el.clt_noturno_perc.value = "20";
                 el.clt_noturno_horas.value = "0";
                 el.clt_he_100_horas.value = "0";
-                el.clt_he_var_horas.value = "0";
-                el.clt_he_var_perc.value = "50";
+                // Limpar HE variáveis dinâmicas
+                const heVarContainerLimpar = document.getElementById('clt_he_var_container');
+                if (heVarContainerLimpar) heVarContainerLimpar.innerHTML = '';
                 el.clt_faltas_dias.value = "0";
                 el.clt_faltas_dsr_dias.value = "0";
                 el.clt_atrasos_horas.value = "0";
@@ -3075,10 +3072,27 @@
                 c.he_100_valor = valor_hora_real * 2.0 * c.he_100_horas;
                 c.he_100_reflexo_dsr = c.he_100_valor * c.fator_dsr;
 
-                c.he_var_horas = getValorNum(el.clt_he_var_horas);
-                c.he_var_perc = getValorNum(el.clt_he_var_perc) / 100;
-                c.he_var_valor = valor_hora_real * (1 + c.he_var_perc) * c.he_var_horas;
-                c.he_var_reflexo_dsr = c.he_var_valor * c.fator_dsr;
+                // HE Variáveis dinâmicas
+                c.he_var_valor = 0;
+                c.he_var_reflexo_dsr = 0;
+                const heVarContainer = document.getElementById('clt_he_var_container');
+                if (heVarContainer) {
+                    const rows = heVarContainer.querySelectorAll('.clt-he-var-row');
+                    rows.forEach(row => {
+                        const inpHoras = row.querySelector('.clt-he-var-inp-horas');
+                        const inpPerc  = row.querySelector('.clt-he-var-inp-perc');
+                        const outValor  = row.querySelector('.clt-he-var-out-valor');
+                        const outRefl   = row.querySelector('.clt-he-var-out-reflexo');
+                        const h = parseFloat((inpHoras ? inpHoras.value : '0').replace(',','.')) || 0;
+                        const p = parseFloat((inpPerc  ? inpPerc.value  : '0').replace(',','.')) || 0;
+                        const rowValor = valor_hora_real * (1 + p / 100) * h;
+                        const rowRefl  = rowValor * c.fator_dsr;
+                        if (outValor)  outValor.textContent  = formatBRL(rowValor);
+                        if (outRefl)   outRefl.textContent   = formatBRL(rowRefl);
+                        c.he_var_valor        += rowValor;
+                        c.he_var_reflexo_dsr  += rowRefl;
+                    });
+                }
 
                 c.he_total_geral = c.he_100_valor + c.he_var_valor + c.he_100_reflexo_dsr + c.he_var_reflexo_dsr;
 
@@ -3231,8 +3245,6 @@
 
                 el.clt_out_he_100_valor.innerText = formatBRL(c.he_100_valor);
                 el.clt_out_he_100_reflexo.innerText = formatBRL(c.he_100_reflexo_dsr);
-                el.clt_out_he_var_valor.innerText = formatBRL(c.he_var_valor);
-                el.clt_out_he_var_reflexo.innerText = formatBRL(c.he_var_reflexo_dsr);
                 el.clt_out_he_total_valor.innerText = formatBRL(c.he_100_valor + c.he_var_valor);
                 el.clt_out_he_total_reflexo.innerText = formatBRL(c.he_100_reflexo_dsr + c.he_var_reflexo_dsr);
                 el.clt_out_he_total_geral.innerText = formatBRL(c.he_total_geral);
@@ -3290,9 +3302,55 @@
 
             window.clt_switchTab = switchTab;
 
+            // ===== HE VARIÁVEIS DINÂMICAS =====
+            function criarLinhaHeVar() {
+                const container = document.getElementById('clt_he_var_container');
+                if (!container) return;
+                const idx = container.querySelectorAll('.clt-he-var-row').length + 1;
+                const row = document.createElement('div');
+                row.className = 'clt-he-var-row';
+                row.style.cssText = 'border:1px solid #e0e7ff;border-radius:8px;padding:8px 10px;margin-top:6px;background:#f8f8ff;';
+                row.innerHTML = `
+                    <div style="display:flex;align-items:center;gap:6px;margin-bottom:5px;">
+                        <span style="font-size:0.78rem;font-weight:600;color:#4f46e5;flex:1;">HE Variável #${idx}</span>
+                        <button type="button" class="clt-he-var-remove" style="background:none;border:none;color:#b91c1c;cursor:pointer;font-size:0.75rem;text-decoration:underline;">remover</button>
+                    </div>
+                    <div style="display:flex;gap:6px;margin-bottom:4px;">
+                        <div style="flex:1;">
+                            <label style="font-size:0.72rem;color:#6b7280;display:block;margin-bottom:2px;">Horas</label>
+                            <input type="number" class="clt-he-var-inp-horas" value="0" min="0" step="0.5"
+                                style="width:100%;border:1px solid #d1d5db;border-radius:6px;padding:4px 7px;font-size:0.85rem;">
+                        </div>
+                        <div style="flex:1;">
+                            <label style="font-size:0.72rem;color:#6b7280;display:block;margin-bottom:2px;">% (Ex: 50)</label>
+                            <input type="number" class="clt-he-var-inp-perc" value="50" min="0" step="1"
+                                style="width:100%;border:1px solid #d1d5db;border-radius:6px;padding:4px 7px;font-size:0.85rem;">
+                        </div>
+                    </div>
+                    <div style="font-size:0.75rem;color:#374151;display:flex;flex-direction:column;gap:1px;">
+                        <span>Valor HE (R$): <strong class="clt-he-var-out-valor">R$ 0,00</strong></span>
+                        <span>Reflexo DSR (R$): <strong class="clt-he-var-out-reflexo">R$ 0,00</strong></span>
+                    </div>
+                `;
+                row.querySelector('.clt-he-var-remove').addEventListener('click', () => {
+                    container.removeChild(row);
+                    calcularTudo();
+                });
+                row.querySelectorAll('input').forEach(inp => {
+                    inp.addEventListener('input', calcularTudo);
+                });
+                container.appendChild(row);
+                calcularTudo();
+            }
+
             // Inicialização
             document.addEventListener('DOMContentLoaded', () => {
                 cacheElementos();
+
+                // Botão adicionar HE variável
+                const btnAddHeVar = document.getElementById('clt_btn_add_he_var');
+                if (btnAddHeVar) btnAddHeVar.addEventListener('click', criarLinhaHeVar);
+
                 const inputs = document.querySelectorAll('#app-clt input, #app-clt select');
                 inputs.forEach(input => {
                     const ev = (input.tagName === 'SELECT' || input.type === 'checkbox') ? 'change' : 'input';
