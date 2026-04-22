@@ -899,6 +899,13 @@
                             oninput="limparResultadosPL()">
                     </div>
                 </div>
+                <div class="form-group" style="margin-bottom: 20px;">
+                    <label style="display:flex; align-items:center; gap:8px; cursor:pointer;">
+                        <input type="checkbox" id="pl_recolhe_fgts" onchange="limparResultadosPL(); toggleMsgFGTS()" style="width: 16px; height: 16px; accent-color: #4f46e5;">
+                        <span style="font-weight:500; color:#374151;">Recolher FGTS (8%) sobre Pró-Labore</span>
+                    </label>
+                    <p id="pl_msg_fgts" style="font-size:0.8rem; color:#6b7280; margin-top:6px; margin-left: 24px;">Pró-Labore sem incidência de FGTS (regra padrão).</p>
+                </div>
                 <button type="submit" class="btn-pl">Calcular e Comparar</button>
             </form>
 
@@ -936,6 +943,10 @@
                             <span class="result-label">Líquido</span>
                             <span class="result-value" id="leg-liquido">R$ 0,00</span>
                         </div>
+                        <div class="result-row pl-fgts-row" style="display:none; margin-top:12px; padding:12px; background-color:#eff6ff; border:1px solid #bfdbfe; border-radius:8px; color:#1e40af; align-items:center;">
+                            <span class="result-label" style="font-weight:600; font-size:0.85rem;">FGTS (8%) <span style="font-size:0.7rem; color:#3b82f6; display:block;">Encargo da Empresa</span></span>
+                            <span class="result-value pl-fgts-valor" style="font-weight:800; font-size:1.1rem; color:#1d4ed8;">R$ 0,00</span>
+                        </div>
                     </div>
 
                     <!-- Card Simples -->
@@ -967,7 +978,11 @@
                             <span class="result-label">Líquido</span>
                             <span class="result-value" id="simp-liquido">R$ 0,00</span>
                         </div>
-                        <div style="font-size:0.7rem; color:#888; margin-top:5px; line-height:1.2;">
+                        <div class="result-row pl-fgts-row" style="display:none; margin-top:12px; padding:12px; background-color:#eff6ff; border:1px solid #bfdbfe; border-radius:8px; color:#1e40af; align-items:center;">
+                            <span class="result-label" style="font-weight:600; font-size:0.85rem;">FGTS (8%) <span style="font-size:0.7rem; color:#3b82f6; display:block;">Encargo da Empresa</span></span>
+                            <span class="result-value pl-fgts-valor" style="font-weight:800; font-size:1.1rem; color:#1d4ed8;">R$ 0,00</span>
+                        </div>
+                        <div style="font-size:0.7rem; color:#888; margin-top:8px; line-height:1.2;">
                             * O INSS ainda é descontado do salário, apenas não é usado para abater a base do IRRF.<br>
                             ** Valor fixo de 25% da faixa isenta (R$ 1.250,00).
                         </div>
@@ -1928,6 +1943,18 @@
             }
         }
 
+        function toggleMsgFGTS() {
+            const cb = document.getElementById('pl_recolhe_fgts');
+            const msg = document.getElementById('pl_msg_fgts');
+            if (cb && cb.checked) {
+                msg.textContent = "Será aplicado FGTS de 8% sobre o valor do Pró-Labore.";
+                msg.style.color = "#4f46e5";
+            } else if (msg) {
+                msg.textContent = "Pró-Labore sem incidência de FGTS (regra padrão).";
+                msg.style.color = "#6b7280";
+            }
+        }
+
         function limparResultadosPL() {
             document.getElementById('resultado-pl').style.display = 'none';
         }
@@ -2031,6 +2058,21 @@
             document.getElementById('simp-base').innerText = formatarMoeda(baseSimp);
             document.getElementById('simp-irrf').innerText = "- " + formatarMoeda(iSimp);
             document.getElementById('simp-liquido').innerText = formatarMoeda(lSimp);
+
+            // FGTS
+            const recolheFGTS = document.getElementById('pl_recolhe_fgts') ? document.getElementById('pl_recolhe_fgts').checked : false;
+            let fgts = 0;
+            if (recolheFGTS) {
+                fgts = sal * 0.08;
+            }
+            const fgtsRows = document.querySelectorAll('.pl-fgts-row');
+            const fgtsVals = document.querySelectorAll('.pl-fgts-valor');
+            if (recolheFGTS) {
+                fgtsRows.forEach(r => r.style.display = 'flex');
+                fgtsVals.forEach(v => v.innerText = formatarMoeda(fgts));
+            } else {
+                fgtsRows.forEach(r => r.style.display = 'none');
+            }
 
             document.getElementById('resultado-pl').style.display = 'block';
             document.getElementById('card-legal').classList.remove('best-option');
